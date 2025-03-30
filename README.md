@@ -1,7 +1,9 @@
 # API para controle financeiro
 
-classDiagram mermaid
-```
+
+## 
+``` mermaid
+classDiagram
     class Usuario {
         +String nome
         +String login
@@ -9,13 +11,13 @@ classDiagram mermaid
         +Boolean logado
         +inserirMovimentacao(valor: float, tipo: String) void
     }
-    
+
     class Movimentacao {
         +float valor
         +String tipo
         +Date dataCriacao
     }
-    
+
     Usuario "1" -- "*" Movimentacao : possui
     Usuario ..> Movimentacao : cria se logado
 ```
