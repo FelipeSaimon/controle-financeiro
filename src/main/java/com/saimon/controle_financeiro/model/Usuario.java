@@ -1,9 +1,8 @@
 package com.saimon.controle_financeiro.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Usuario {
@@ -14,6 +13,9 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
+
+    @OneToMany
+    private List<Movimentacao> movimentacoes;
 
     public Long getId() {
         return id;
