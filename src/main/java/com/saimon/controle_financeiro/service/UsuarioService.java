@@ -14,7 +14,7 @@ public class UsuarioService {
 
     public Usuario save(Usuario usuario) throws Exception{
         if(usuario.getNome() == null || usuario.getEmail() == null || usuario.getSenha() == null){
-            throw new IllegalArgumentException("Usuario já cadastrado!");
+            throw new IllegalArgumentException("Campos obrigatórios!");
         }
         return usuarioRepository.save(usuario);
     }
