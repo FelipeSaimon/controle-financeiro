@@ -2,6 +2,7 @@ package com.saimon.controle_financeiro.Domain.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -11,7 +12,7 @@ public class Movimentacao {
     private Long id;
 
     private double valorMovimentacao;
-    private Date dataDeCriacao;
+    private LocalDateTime dataDeCriacao;
     private boolean logado;
 
     public Movimentacao(){}
@@ -44,11 +45,11 @@ public class Movimentacao {
         this.valorMovimentacao = valorMovimentacao;
     }
 
-    public Date getDataDeCriacao() {
+    public LocalDateTime getDataDeCriacao() {
         return dataDeCriacao;
     }
 
-    public void setDataDeCriacao(Date dataDeCriacao) {
+    public void setDataDeCriacao(LocalDateTime dataDeCriacao) {
         this.dataDeCriacao = dataDeCriacao;
     }
 
