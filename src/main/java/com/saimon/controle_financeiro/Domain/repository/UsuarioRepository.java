@@ -1,6 +1,6 @@
-package com.saimon.controle_financeiro.repository;
+package com.saimon.controle_financeiro.Domain.repository;
 
-import com.saimon.controle_financeiro.model.Usuario;
+import com.saimon.controle_financeiro.Domain.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

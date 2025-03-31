@@ -1,8 +1,8 @@
 package com.saimon.controle_financeiro.service;
 
-import com.saimon.controle_financeiro.model.Usuario;
+import com.saimon.controle_financeiro.Domain.model.Usuario;
 import org.springframework.stereotype.Service;
-import com.saimon.controle_financeiro.repository.UsuarioRepository;
+import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {

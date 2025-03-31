@@ -1,4 +1,4 @@
-package com.saimon.controle_financeiro.model;
+package com.saimon.controle_financeiro.Domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
