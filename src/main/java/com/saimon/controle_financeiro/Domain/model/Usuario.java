@@ -14,7 +14,7 @@ public class Usuario {
     private String email;
     private String senha;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Movimentacao> movimentacoes;
 
     public Long getId() {

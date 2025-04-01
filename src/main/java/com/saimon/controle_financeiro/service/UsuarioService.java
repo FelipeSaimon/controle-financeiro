@@ -4,6 +4,8 @@ import com.saimon.controle_financeiro.Domain.model.Usuario;
 import org.springframework.stereotype.Service;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
@@ -20,6 +22,10 @@ public class UsuarioService {
     }
 
     public Usuario findById(Long id){
-        return usuarioRepository.findById(id).orElseThrow();
+        return usuarioRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    public void delete(Long id){
+        usuarioRepository.deleteById(id);
     }
 }

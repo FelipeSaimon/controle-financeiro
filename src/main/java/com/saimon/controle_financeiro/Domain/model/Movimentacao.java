@@ -3,7 +3,6 @@ package com.saimon.controle_financeiro.Domain.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Movimentacao {
@@ -11,15 +10,14 @@ public class Movimentacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private double valorMovimentacao;
+    private double valor_movimentacao;
     private LocalDateTime dataDeCriacao;
     private boolean logado;
 
-    public Movimentacao(){}
-
-
     @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
 
     public Usuario getUsuario() {
         return usuario;
@@ -38,11 +36,11 @@ public class Movimentacao {
     }
 
     public double getValorMovimentacao() {
-        return valorMovimentacao;
+        return this.valor_movimentacao;
     }
 
     public void setValorMovimentacao(double valorMovimentacao) {
-        this.valorMovimentacao = valorMovimentacao;
+        this.valor_movimentacao = valorMovimentacao;
     }
 
     public LocalDateTime getDataDeCriacao() {
