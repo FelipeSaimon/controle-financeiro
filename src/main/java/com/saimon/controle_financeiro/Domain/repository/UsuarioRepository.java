@@ -2,8 +2,6 @@ package com.saimon.controle_financeiro.Domain.repository;
 
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

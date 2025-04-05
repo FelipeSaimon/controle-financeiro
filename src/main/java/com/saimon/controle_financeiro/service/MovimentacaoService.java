@@ -4,12 +4,9 @@ import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.MovimentacaoRepository;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
-import com.saimon.controle_financeiro.controller.DTO.MovimentacaoDTO;
-import com.saimon.controle_financeiro.controller.MovimentacaoController;
-import jakarta.persistence.EntityNotFoundException;
+import com.saimon.controle_financeiro.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class MovimentacaoService {
 
     public Movimentacao create(Long id){
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário com ID " + id + " não encontrado"));
 
         Movimentacao movimentacao = new Movimentacao();
         movimentacao.setUsuario(usuario);
