@@ -1,20 +1,16 @@
 package com.saimon.controle_financeiro.infra.security;
 
-import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 import com.saimon.controle_financeiro.infra.security.JTW.JWTFilter;
 import jakarta.servlet.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,7 +37,7 @@ public class WebSecurityConfigurations {
                 .addFilterAfter((Filter) new JWTFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
                             .anyRequest().authenticated();
                 })
@@ -52,5 +48,13 @@ public class WebSecurityConfigurations {
         return httpSecurity.build();
     }
 
-
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
 }
