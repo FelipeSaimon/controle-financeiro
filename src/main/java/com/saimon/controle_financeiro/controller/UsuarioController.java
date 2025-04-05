@@ -17,7 +17,7 @@ public class UsuarioController {
     }
 
     @CrossOrigin(origins = { "http://localhost:5173" })
-    @PostMapping
+    @PostMapping("/cadastrar")
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuarioCriado) throws Exception {
         usuarioCriado = usuarioService.save(usuarioCriado);
         return ResponseEntity.ok().body(usuarioCriado);
@@ -29,10 +29,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @CrossOrigin(origins = { "http://localhost:5173" })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){
-        usuarioService.delete(id);
+        var usuario = usuarioService.findById(id);
+        usuarioService.delete(usuario.getId());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
