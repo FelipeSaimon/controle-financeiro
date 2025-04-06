@@ -11,10 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JWTFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JWTFilter.class);
@@ -24,12 +27,15 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             String token = request.getHeader(JWTCreator.HEADER_AUTHORIZATION);
 
-            if(token != null && !token.isEmpty()){
+            if (token != null) {
+                if (token.startsWith("Bearer ")) {
+                    token = token.replace("Bearer ", "").trim();
+                }
+
                 JWTObject tokenObject = JWTCreator.decode(SecurityConfigurations.PREFIXO, SecurityConfigurations.CHAVE, token);
-                UserRole authorities = convertToAuthorities(tokenObject.getRole());
-
-                UsernamePasswordAuthenticationToken usuarioToken = new UsernamePasswordAuthenticationToken(authorities, tokenObject.getUsuario(), null);
-
+                List<SimpleGrantedAuthority> authorities = convertToAuthorities(tokenObject.getRoles());
+                UsernamePasswordAuthenticationToken usuarioToken =
+                        new UsernamePasswordAuthenticationToken(tokenObject.getUsuario(), null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(usuarioToken);
             } else {
                 SecurityContextHolder.clearContext();
@@ -47,10 +53,12 @@ public class JWTFilter extends OncePerRequestFilter {
     /**
      * Converte a lista de roles em objetos SimpleGrantedAuthority
      *
-     * @param role Lista de roles como strings
+     * @param roles Lista de roles como strings
      * @return Lista de autoridades concedidas
      */
-    public UserRole convertToAuthorities(UserRole role){
-        return role;
+    private List<SimpleGrantedAuthority> convertToAuthorities(List<String> roles) {
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

@@ -37,6 +37,7 @@ public class WebSecurityConfigurations {
                 .addFilterAfter((Filter) new JWTFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth
+                            .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
                             .anyRequest().authenticated();

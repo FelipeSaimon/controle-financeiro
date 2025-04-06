@@ -1,14 +1,12 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
-import com.saimon.controle_financeiro.Domain.Enum.UserRole;
-
 import java.util.*;
 
 public class JWTObject {
     private String usuario;
     private Date dataDeCriacao;
     private Date dataDeExpiracao;
-    private UserRole role;
+    private List<String> roles;
 
     public String getUsuario() {
         return usuario;
@@ -34,11 +32,11 @@ public class JWTObject {
         this.dataDeExpiracao = dataDeExpiracao;
     }
 
-    public UserRole getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(UserRole role) {
-        this.role = UserRole.USER_ROLE;
+    public void setRoles(Object o){
+        this.roles = Collections.singletonList(String.valueOf(roles));
     }
 }

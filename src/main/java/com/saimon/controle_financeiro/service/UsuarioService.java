@@ -23,6 +23,10 @@ public class UsuarioService {
         if(usuario.getNome() == null || usuario.getEmail() == null || usuario.getSenha() == null){
             throw new IllegalArgumentException("Campos obrigatórios!");
         }
+        String senha = usuario.getSenha();
+
+        // Criptogrando a senha antes de salvá-la no banco
+        usuario.setSenha(encoder.encode(senha));
         return usuarioRepository.save(usuario);
     }
 
@@ -34,12 +38,9 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // Criptografia da senha ao criar um usuario.
-    public void createUser(Usuario user){
-        String senha = user.getSenha();
-
-        // Criptogrando a senha antes de salvá-la no banco
-        user.setSenha(encoder.encode(senha));
-        usuarioRepository.save(user);
-    }
+//    // Criptografia da senha ao criar um usuario.
+//    public void createUser(Usuario user){
+//
+//        usuarioRepository.save(user);
+//    }
 }

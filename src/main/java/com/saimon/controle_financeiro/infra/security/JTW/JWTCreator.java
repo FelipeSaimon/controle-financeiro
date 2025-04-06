@@ -1,12 +1,14 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
 import com.saimon.controle_financeiro.Domain.Enum.UserRole;
+import com.saimon.controle_financeiro.infra.security.SecurityConfigurations;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,7 @@ public class JWTCreator {
      * Cria um token JWT com as informações do usuário
      *
      * @param prefixo Prefixo do token (geralmente "Bearer")
-     * @param chave   Chave secreta para assinar o token
+//     * @param chave   Chave secreta para assinar o token
      * @param jwtObject Objeto contendo as informações do usuário
      * @return Token JWT completo (com prefixo)
      */
@@ -30,7 +32,7 @@ public class JWTCreator {
                 .subject(jwtObject.getUsuario())
                 .issuedAt(jwtObject.getDataDeCriacao())
                 .expiration(jwtObject.getDataDeExpiracao())
-                .claim(ROLES_AUTHORITIES, jwtObject.getRole())
+                .claim(ROLES_AUTHORITIES, jwtObject.getRoles())
                 .signWith(key)
                 .compact();
 
@@ -58,10 +60,11 @@ public class JWTCreator {
                 .parseSignedClaims(token)
                 .getPayload();
 
+
         jwtObject.setUsuario(claims.getSubject());
         jwtObject.setDataDeCriacao(claims.getIssuedAt());
         jwtObject.setDataDeExpiracao(claims.getExpiration());
-        jwtObject.setRole((UserRole) claims.get(ROLES_AUTHORITIES));
+        jwtObject.setRoles((List) claims.get(ROLES_AUTHORITIES));
 
         return jwtObject;
     }
@@ -70,12 +73,17 @@ public class JWTCreator {
      * Garante que todas as roles tenham o prefixo "ROLE_"
      *
      * @param roles Lista de roles para verificar
+     * @return Lista de roles normalize
+     */
+    /**
+     * Garante que todas as roles tenham o prefixo "ROLE_"
+     *
+     * @param roles Lista de roles para verificar
      * @return Lista de roles normalizada
      */
-
-    public static List<String> checkRoles(List<String> roles){
+    public static List<String> checkRoles(List<String> roles) {
         return roles.stream()
-                .map(role -> "ROLE_".concat(role.replaceAll("ROLE_ ", "")))
-                .collect(Collectors.toUnmodifiableList());
+                .map(s -> "ROLE_".concat(s.replaceAll("ROLE_", "")))
+                .toList();
     }
 }

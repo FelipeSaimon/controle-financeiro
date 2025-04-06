@@ -23,11 +23,11 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioCriado);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> findById(@PathVariable Long id){
-        var usuario = usuarioService.findById(id);
-        return ResponseEntity.ok(usuario);
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<Usuario> findById(@PathVariable Long id){
+//        var usuario = usuarioService.findById(id);
+//        return ResponseEntity.ok(usuario);
+//    }
 
     @CrossOrigin(origins = { "http://localhost:5173" })
     @DeleteMapping("/{id}")

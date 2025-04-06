@@ -31,7 +31,7 @@ public class AutenticacaoController {
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/usuarios/login")
     public SessaoDTO logar(@RequestBody LoginDTO login){
 
         Usuario usuario = usuarioRepository.findByEmail(login.getEmail())
@@ -40,6 +40,7 @@ public class AutenticacaoController {
         if(usuario != null){
             boolean senhaVerificada = passwordEncoder.matches(login.getSenha(), usuario.getSenha());
 
+            System.out.println(senhaVerificada);
             if (!senhaVerificada){
                 throw new RuntimeException("Senha inválida, verifique sua ultima senha! " + login.getEmail());
             }
@@ -50,9 +51,10 @@ public class AutenticacaoController {
             // Criando o objeto de token JWT
             JWTObject jwtObject = new JWTObject();
 
+            jwtObject.setUsuario(usuario.getEmail()); // <--- isso estava faltando
             jwtObject.setDataDeCriacao(new Date(System.currentTimeMillis()));
             jwtObject.setDataDeExpiracao(new Date(System.currentTimeMillis() + SecurityConfigurations.getEXPIRACAO()));
-            jwtObject.setRole(usuario.getRole());
+            jwtObject.setRoles(usuario.getRole());
 
             sessao.setToken(JWTCreator.create(SecurityConfigurations.PREFIXO, SecurityConfigurations.CHAVE, jwtObject));
 
