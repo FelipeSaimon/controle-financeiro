@@ -26,7 +26,7 @@ public class MovimentacaoController {
     private final MovimentacaoService movimentacaoService;
     private final UsuarioRepository usuarioRepository;
     private final MovimentacaoRepository movimentacaoRepository;
-
+    private double valorMovimentacao;
 
     public MovimentacaoController(MovimentacaoService movimentacaoService, UsuarioRepository usuarioRepository, MovimentacaoRepository movimentacaoRepository){
         this.movimentacaoService = movimentacaoService;
@@ -46,10 +46,9 @@ public class MovimentacaoController {
 
         Movimentacao movimentacao = new Movimentacao();
         movimentacao.setUsuario(usuario);
-        movimentacao.setValorMovimentacao(movimentacao.getValorMovimentacao());
+        movimentacao.setValorMovimentacao(this.valorMovimentacao);
         movimentacao.setDataDeCriacao(LocalDateTime.now());
 
-//        LogManager movimentacaoRepository;
         Movimentacao savedMovimentacao = movimentacaoRepository.save(movimentacao);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovimentacao);
