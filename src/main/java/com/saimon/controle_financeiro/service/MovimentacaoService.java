@@ -32,8 +32,8 @@ public class MovimentacaoService {
         return movimentacaoRepository.save(movimentacao);
     }
 
-    public List<Movimentacao> findByUsuarioId(Long id){
-        return movimentacaoRepository.findAll();
+    public List<Movimentacao> findAll(String email){
+        return movimentacaoRepository.findAllByUsuarioEmail(email);
     }
 
 
