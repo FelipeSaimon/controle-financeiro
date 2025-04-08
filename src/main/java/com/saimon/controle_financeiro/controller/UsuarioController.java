@@ -16,6 +16,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // CADASTRAR USUARIO
     @CrossOrigin(origins = { "http://localhost:5173" })
     @PostMapping("/cadastrar")
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuarioCriado) throws Exception {
@@ -23,6 +24,7 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioCriado);
     }
 
+    // DELETAR USUARIO
     @CrossOrigin(origins = { "http://localhost:5173" })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){
