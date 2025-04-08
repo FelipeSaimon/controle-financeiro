@@ -1,20 +1,18 @@
 package com.saimon.controle_financeiro.controller;
 
-import com.saimon.controle_financeiro.Domain.dto.LoginDTO;
 import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.MovimentacaoRepository;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
-import com.saimon.controle_financeiro.controller.DTO.MovimentacaoDTO;
-import com.saimon.controle_financeiro.infra.security.JTW.JWTCreator;
-import com.saimon.controle_financeiro.infra.security.JTW.JWTObject;
 import com.saimon.controle_financeiro.service.MovimentacaoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,9 +35,6 @@ public class MovimentacaoController {
 
     @PostMapping
     public ResponseEntity<Movimentacao> create(@AuthenticationPrincipal String email) {
-
-//        Usuario usuario = usuarioRepository.findById(dto.getUsuario_id())
-//                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));

@@ -1,16 +1,12 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
-import com.saimon.controle_financeiro.Domain.Enum.UserRole;
-import com.saimon.controle_financeiro.infra.security.SecurityConfigurations;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JWTCreator {
     static final String HEADER_AUTHORIZATION = "Authorization";
@@ -69,12 +65,6 @@ public class JWTCreator {
         return jwtObject;
     }
 
-    /**
-     * Garante que todas as roles tenham o prefixo "ROLE_"
-     *
-     * @param roles Lista de roles para verificar
-     * @return Lista de roles normalize
-     */
     /**
      * Garante que todas as roles tenham o prefixo "ROLE_"
      *

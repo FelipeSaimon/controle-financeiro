@@ -23,12 +23,6 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioCriado);
     }
 
-//    @GetMapping("/login")
-//    public ResponseEntity<Usuario> findById(@PathVariable Long id){
-//        var usuario = usuarioService.findById(id);
-//        return ResponseEntity.ok(usuario);
-//    }
-
     @CrossOrigin(origins = { "http://localhost:5173" })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){

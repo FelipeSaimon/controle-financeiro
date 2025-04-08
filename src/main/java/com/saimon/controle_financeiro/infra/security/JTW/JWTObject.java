@@ -1,6 +1,8 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class JWTObject {
     private String usuario;

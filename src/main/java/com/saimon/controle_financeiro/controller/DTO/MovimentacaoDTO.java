@@ -1,7 +1,5 @@
 package com.saimon.controle_financeiro.controller.DTO;
 
-import com.saimon.controle_financeiro.Domain.dto.SessaoDTO;
-
 import java.time.LocalDateTime;
 
 public class MovimentacaoDTO {

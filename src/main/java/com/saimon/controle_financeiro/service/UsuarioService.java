@@ -1,10 +1,10 @@
 package com.saimon.controle_financeiro.service;
 
 import com.saimon.controle_financeiro.Domain.model.Usuario;
+import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 
 import java.util.NoSuchElementException;
 
@@ -37,10 +37,4 @@ public class UsuarioService {
     public void delete(Long id){
         usuarioRepository.deleteById(id);
     }
-
-//    // Criptografia da senha ao criar um usuario.
-//    public void createUser(Usuario user){
-//
-//        usuarioRepository.save(user);
-//    }
 }

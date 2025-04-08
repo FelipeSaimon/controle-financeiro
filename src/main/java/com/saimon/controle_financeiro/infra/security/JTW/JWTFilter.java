@@ -1,6 +1,5 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
-import com.saimon.controle_financeiro.Domain.Enum.UserRole;
 import com.saimon.controle_financeiro.infra.security.SecurityConfigurations;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
