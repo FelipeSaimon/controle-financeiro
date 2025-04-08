@@ -29,4 +29,9 @@ public class GlobalExceptionsHandler {
         return new ResponseEntity<>("Usuario não encontrado. ", HttpStatus.NOT_FOUND);
     };
 
+    @ExceptionHandler(CredenciaisInvalidas.class)
+    public ResponseEntity<String> handleCredenciaisInvalidas(CredenciaisInvalidas ex){
+//        return new ResponseEntity<>("Usuario ou senha incorretos. ", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
 }
