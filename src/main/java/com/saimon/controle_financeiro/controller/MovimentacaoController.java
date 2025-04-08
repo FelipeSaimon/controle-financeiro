@@ -4,15 +4,13 @@ import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.MovimentacaoRepository;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
+import com.saimon.controle_financeiro.DTO.MovimentacaoDTO;
 import com.saimon.controle_financeiro.service.MovimentacaoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +22,6 @@ public class MovimentacaoController {
     private final MovimentacaoService movimentacaoService;
     private final UsuarioRepository usuarioRepository;
     private final MovimentacaoRepository movimentacaoRepository;
-    private double valorMovimentacao;
 
     public MovimentacaoController(MovimentacaoService movimentacaoService, UsuarioRepository usuarioRepository, MovimentacaoRepository movimentacaoRepository){
         this.movimentacaoService = movimentacaoService;
@@ -34,14 +31,14 @@ public class MovimentacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Movimentacao> create(@AuthenticationPrincipal String email) {
+    public ResponseEntity<Movimentacao> create(@AuthenticationPrincipal String email, @RequestBody MovimentacaoDTO movimentacaoDTO) {
 
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         Movimentacao movimentacao = new Movimentacao();
         movimentacao.setUsuario(usuario);
-        movimentacao.setValorMovimentacao(this.valorMovimentacao);
+        movimentacao.setValorMovimentacao(movimentacaoDTO.getValorMovimentacao());
         movimentacao.setDataDeCriacao(LocalDateTime.now());
 
         Movimentacao savedMovimentacao = movimentacaoRepository.save(movimentacao);
