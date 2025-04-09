@@ -13,7 +13,6 @@ public class Movimentacao {
 
     private double valor_movimentacao;
     private LocalDateTime dataDeCriacao;
-    private boolean logado;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -51,13 +50,5 @@ public class Movimentacao {
 
     public void setDataDeCriacao(LocalDateTime dataDeCriacao) {
         this.dataDeCriacao = dataDeCriacao;
-    }
-
-    public boolean isLogado() {
-        return logado;
-    }
-
-    public void setLogado(boolean logado) {
-        this.logado = logado;
     }
 }
