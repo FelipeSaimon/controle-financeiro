@@ -22,16 +22,12 @@ import java.util.Date;
 public class AutenticacaoController {
 
     private final PasswordEncoder passwordEncoder;
-    private final SecurityConfigurations securityConfigurations;
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioService usuarioService;
 
 
     public AutenticacaoController(PasswordEncoder passwordEncoder, SecurityConfigurations securityConfigurations, UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
         this.passwordEncoder = passwordEncoder;
-        this.securityConfigurations = securityConfigurations;
         this.usuarioRepository = usuarioRepository;
-        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/usuarios/login")
