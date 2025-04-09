@@ -1,7 +1,9 @@
 package com.saimon.controle_financeiro.controller;
 
+import com.saimon.controle_financeiro.DTO.SessaoDTO;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.service.UsuarioService;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +26,26 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioCriado);
     }
 
-    // DELETAR USUARIO
-    @CrossOrigin(origins = { "http://localhost:5173" })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){
-        var usuario = usuarioService.findById(id);
-        usuarioService.delete(usuario.getId());
 
+    /*
+    * 1 - Pega o email do token de autenticação, pode ser o padrão do spring security
+    * 2 - Busca o usuario cadastrado no banco com o email autenticado
+    * 3 - Verifica se é nulo
+    * 4 - Deleta esse usuario pelo id
+    * 5 - Retorna status 204.
+    */
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deletarUsuarioLogado(Authentication authentication) {
+        String email = authentication.getName();
+
+        Usuario usuario = usuarioService.findByEmail(email);
+
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        usuarioService.delete(usuario.getId());
         return ResponseEntity.noContent().build();
     }
+
 }
