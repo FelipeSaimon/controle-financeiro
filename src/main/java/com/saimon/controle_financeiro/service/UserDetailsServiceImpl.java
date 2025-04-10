@@ -1,6 +1,7 @@
 package com.saimon.controle_financeiro.service;
 
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
+import com.saimon.controle_financeiro.exceptions.UserNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return usuarioRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+                .orElseThrow(UserNotFoundException::new);
     }
 }
