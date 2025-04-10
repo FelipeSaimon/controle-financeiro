@@ -4,6 +4,7 @@ import com.saimon.controle_financeiro.DTO.LoginDTO;
 import com.saimon.controle_financeiro.DTO.SessaoDTO;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
+import com.saimon.controle_financeiro.exceptions.CamposObrigatorios;
 import com.saimon.controle_financeiro.exceptions.CredenciaisInvalidas;
 import com.saimon.controle_financeiro.infra.security.JTW.JWTCreator;
 import com.saimon.controle_financeiro.infra.security.JTW.JWTObject;
@@ -20,10 +21,8 @@ import java.util.Date;
 // SERIA O MIDDLEWARE DE AUTENTICAÇÃO?
 @RestController
 public class AutenticacaoController {
-
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
-
 
     public AutenticacaoController(PasswordEncoder passwordEncoder, SecurityConfigurations securityConfigurations, UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
         this.passwordEncoder = passwordEncoder;
@@ -34,7 +33,7 @@ public class AutenticacaoController {
     public SessaoDTO logar(@RequestBody @Valid LoginDTO login) {
         if (login.getEmail() == null || login.getEmail().isBlank() ||
                 login.getSenha() == null || login.getSenha().isBlank()) {
-            throw new RuntimeException("Email e senha são obrigatórios");
+            throw new CamposObrigatorios();
         }
 
         Usuario usuario = usuarioRepository.findByEmail(login.getEmail())
