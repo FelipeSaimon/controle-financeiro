@@ -24,14 +24,22 @@ public class GlobalExceptionsHandler {
         return new ResponseEntity<>("Resource ID not found.", HttpStatus.NOT_FOUND);
     }
 
+    // EXCEÇÃO PARA USUÁRIO NÃO ENCONTRADO
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex){
         return new ResponseEntity<>("Usuario não encontrado. ", HttpStatus.NOT_FOUND);
     };
 
+    // EXCEÇÃO PARA CREDENCIAIS INVÁLIDAS
     @ExceptionHandler(CredenciaisInvalidas.class)
     public ResponseEntity<String> handleCredenciaisInvalidas(CredenciaisInvalidas ex){
 //        return new ResponseEntity<>("Usuario ou senha incorretos. ", HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    // EXCEÇÃO PARA CAMPOS OBRIGATÓRIOS
+    @ExceptionHandler(CamposObrigatorios.class)
+    public ResponseEntity<String> handleCamposObrigatorios(CamposObrigatorios ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
