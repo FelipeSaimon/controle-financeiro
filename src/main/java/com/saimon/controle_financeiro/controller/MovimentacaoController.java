@@ -1,10 +1,12 @@
 package com.saimon.controle_financeiro.controller;
 
+import com.saimon.controle_financeiro.DTO.ResumoValoresDTO;
 import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.MovimentacaoRepository;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 import com.saimon.controle_financeiro.DTO.MovimentacaoDTO;
+import com.saimon.controle_financeiro.exceptions.UserNotFoundException;
 import com.saimon.controle_financeiro.service.MovimentacaoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,31 +21,30 @@ import java.util.List;
 @RequestMapping("/movimentacoes")
 public class MovimentacaoController {
 
-    private final MovimentacaoService movimentacaoService;
     private final UsuarioRepository usuarioRepository;
     private final MovimentacaoRepository movimentacaoRepository;
+    private final MovimentacaoService movimentacaoService;
 
-    public MovimentacaoController(MovimentacaoService movimentacaoService, UsuarioRepository usuarioRepository, MovimentacaoRepository movimentacaoRepository){
-        this.movimentacaoService = movimentacaoService;
+    public MovimentacaoController(MovimentacaoService movimentacaoService, UsuarioRepository usuarioRepository, MovimentacaoRepository movimentacaoRepository, MovimentacaoService movimentacaoService1){
         this.usuarioRepository = usuarioRepository;
         this.movimentacaoRepository = movimentacaoRepository;
-
+	    this.movimentacaoService = movimentacaoService;
     }
 
+    // CRIA MOVIMENTACAO NO BANCO
     @PostMapping
     public ResponseEntity<Movimentacao> create(@AuthenticationPrincipal String email, @RequestBody MovimentacaoDTO movimentacaoDTO) {
-
         Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(UserNotFoundException::new);
 
-        Movimentacao movimentacao = new Movimentacao();
-        movimentacao.setUsuario(usuario);
-        movimentacao.setValorMovimentacao(movimentacaoDTO.getValorMovimentacao());
-        movimentacao.setDataDeCriacao(LocalDateTime.now());
+            Movimentacao movimentacao = new Movimentacao();
+            movimentacao.setUsuario(usuario);
+            movimentacao.setValorMovimentacao(movimentacaoDTO.getValorMovimentacao());
+            movimentacao.setTipo(movimentacaoDTO.getTipo());
+            movimentacao.setDataDeCriacao(LocalDateTime.now());
 
-        Movimentacao savedMovimentacao = movimentacaoRepository.save(movimentacao);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovimentacao);
+            Movimentacao savedMovimentacao = movimentacaoRepository.save(movimentacao);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedMovimentacao);
     }
 
     // BUSCAR TODAS MOVIMENTAÇÕES PELO USUARIO (AUTENTICADO)
@@ -53,4 +54,19 @@ public class MovimentacaoController {
         return ResponseEntity.ok(movimentacoes);
     }
 
+    //DELETANDO UMA MOVIMENTAÇÃO
+    @DeleteMapping("/remove/{id}")
+    public void removeMoviment(@PathVariable Long id) throws Exception {
+        Movimentacao movimentacao = movimentacaoRepository.findById(id).orElseThrow(NoSuchFieldException::new);
+
+        movimentacaoRepository.delete(movimentacao);
+    }
+
+    // GERA O RESUMO DOS TOTAIS DE VALORES DE ENTRADA E DE SAIDAS
+    @GetMapping("/resumo")
+    public ResponseEntity<ResumoValoresDTO> generateSummary(@AuthenticationPrincipal String email){
+        ResumoValoresDTO resumo = movimentacaoService.recalcularValores(email);
+
+        return ResponseEntity.ok(resumo);
+    }
 }
