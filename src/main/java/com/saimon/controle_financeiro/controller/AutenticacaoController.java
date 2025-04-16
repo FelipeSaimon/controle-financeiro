@@ -10,16 +10,20 @@ import com.saimon.controle_financeiro.infra.security.JTW.JWTCreator;
 import com.saimon.controle_financeiro.infra.security.JTW.JWTObject;
 import com.saimon.controle_financeiro.infra.security.SecurityConfigurations;
 import com.saimon.controle_financeiro.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
 // SERIA O MIDDLEWARE DE AUTENTICAÇÃO?
 @RestController
+@RequestMapping("/auth")
 public class AutenticacaoController {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
@@ -29,8 +33,8 @@ public class AutenticacaoController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    @PostMapping("/usuarios/login")
-    public SessaoDTO logar(@RequestBody @Valid LoginDTO login) {
+    @PostMapping("/login")
+    public SessaoDTO logar(@RequestBody @Valid LoginDTO login, HttpServletResponse httpServletResponse) {
         if (login.getEmail() == null || login.getEmail().isBlank() ||
                 login.getSenha() == null || login.getSenha().isBlank()) {
             throw new CamposObrigatorios();
@@ -55,6 +59,60 @@ public class AutenticacaoController {
         jwtObject.setRoles(usuario.getRole());
 
         sessao.setToken(JWTCreator.create(SecurityConfigurations.PREFIXO, SecurityConfigurations.CHAVE, jwtObject));
+
+        // Criando o reflesh token
+        JWTObject refleshObject = new JWTObject();
+        refleshObject.setUsuario(usuario.getEmail());
+        refleshObject.setDataDeCriacao(new Date(System.currentTimeMillis()));
+        refleshObject.setDataDeExpiracao(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 1000));
+        refleshObject.setRoles(usuario.getRole());
+        
+        String refleshToken = JWTCreator.create(SecurityConfigurations.PREFIXO, SecurityConfigurations.CHAVE, refleshObject);
+
+        // Criando objeto de cookie para reflesh token
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("refleshToken", refleshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/refresh");
+        cookie.setMaxAge(7 * 60 * 60);
+        httpServletResponse.addCookie(cookie);
+
         return sessao;
+    }
+
+    // Criando o endpoint de reflesh do token
+    @PostMapping("/refresh")
+    public SessaoDTO refreshToken(HttpServletRequest httpServletRequest){
+        String token = null;
+
+        if (httpServletRequest.getCookies() != null){
+            for (jakarta.servlet.http.Cookie cookie : httpServletRequest.getCookies()){
+                if (cookie.getName().equals("refreshToken")){
+                    token = cookie.getValue();
+                }
+            }
+        }
+
+        if (token == null){
+            throw new RuntimeException("Refresh token não encontrado");
+        }
+
+        JWTObject jwtObject = JWTCreator.createJWTObject(SecurityConfigurations.CHAVE, token);
+        if (jwtObject.getDataDeExpiracao().before(new Date())){
+            throw new RuntimeException("refresh token expirado");
+        }
+
+        // Criar novo access token
+        JWTObject novoAccessObject = new JWTObject();
+        novoAccessObject.setUsuario(jwtObject.getUsuario());
+        novoAccessObject.setDataDeCriacao(new Date());
+        novoAccessObject.setDataDeExpiracao(new Date(System.currentTimeMillis() + SecurityConfigurations.getEXPIRACAO())); // 15min
+        novoAccessObject.setRoles(jwtObject.getRoles());
+
+        SessaoDTO sessaoRefresh = new SessaoDTO();
+        sessaoRefresh.setLogin(jwtObject.getUsuario());
+        sessaoRefresh.setToken(JWTCreator.create("",SecurityConfigurations.CHAVE, novoAccessObject));
+
+        return sessaoRefresh;
     }
 }
