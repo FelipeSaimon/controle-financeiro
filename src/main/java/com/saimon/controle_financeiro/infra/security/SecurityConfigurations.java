@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class SecurityConfigurations {
     public static String PREFIXO;
     public static String CHAVE;
-    public static Long EXPIRACAO = 1000L * 60 * 60 * 24;
+    public static Long EXPIRACAO = 7000L * 60 * 60;
 
     @Value("${security.config.prefixo}")
     private String prefixo;
