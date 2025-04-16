@@ -18,7 +18,6 @@ public class UsuarioController {
     }
 
     // CADASTRAR USUARIO
-    @CrossOrigin(origins = { "http://localhost:5173" })
     @PostMapping("/cadastrar")
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuarioCriado) throws Exception {
         usuarioCriado = usuarioService.save(usuarioCriado);
