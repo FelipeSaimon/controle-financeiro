@@ -1,5 +1,6 @@
 package com.saimon.controle_financeiro.infra.security.JTW;
 
+import com.saimon.controle_financeiro.infra.security.SecurityConfigurations;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -32,7 +33,7 @@ public class JWTCreator {
                 .signWith(key)
                 .compact();
 
-        return prefixo + " " + token;
+        return prefixo.contains("") ? token : prefixo + " " + token;
     }
 
     /**
@@ -75,5 +76,29 @@ public class JWTCreator {
         return roles.stream()
                 .map(s -> "ROLE_".concat(s.replaceAll("ROLE_", "")))
                 .toList();
+    }
+
+    /**
+     * Cria um token JWT com as informações do usuário
+     *
+     * @param chave Prefixo do token (geralmente "Bearer")
+    //     * @param chave   Chave secreta para assinar o token
+     * @param token Objeto contendo as informações do usuário
+     * @return Token JWT completo (com prefixo)
+     */
+    public static JWTObject createJWTObject(String chave, String token) {
+        token = token.replace(SecurityConfigurations.PREFIXO, "");
+        Claims claims = Jwts.parser()
+                .setSigningKey(chave)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        JWTObject obj = new JWTObject();
+        obj.setUsuario(claims.getSubject());
+        obj.setDataDeCriacao(claims.getIssuedAt());
+        obj.setDataDeExpiracao(claims.getExpiration());
+        obj.setRoles(claims.get("roles"));
+        return obj;
     }
 }
