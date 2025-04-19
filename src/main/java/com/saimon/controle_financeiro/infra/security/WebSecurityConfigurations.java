@@ -34,6 +34,18 @@ public class WebSecurityConfigurations {
         return new BCryptPasswordEncoder();
     };
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/webjars/**"
+    };
+
     // Bean de corrente de filtros
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserDetailsService userDetailsService) throws Exception {
@@ -47,6 +59,7 @@ public class WebSecurityConfigurations {
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/cadastrar").permitAll()
+                            .requestMatchers(SWAGGER_WHITELIST).permitAll()
                             .anyRequest().authenticated();
                 })
                 .userDetailsService(userDetailsService)
@@ -69,14 +82,4 @@ public class WebSecurityConfigurations {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
-
-    private static final String[] SWAGGER_WHITELIST = {
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
 }
