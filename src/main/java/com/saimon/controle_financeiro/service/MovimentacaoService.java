@@ -1,7 +1,10 @@
 package com.saimon.controle_financeiro.service;
 
-import com.saimon.controle_financeiro.DTO.MovimentacaoDTO;
-import com.saimon.controle_financeiro.DTO.ResumoValoresDTO;
+import com.saimon.controle_financeiro.Domain.Enum.LogTipoEvento;
+import com.saimon.controle_financeiro.audit.LoggerServiceInterface;
+import com.saimon.controle_financeiro.audit.LoggerServiceInterface;
+import com.saimon.controle_financeiro.dto.MovimentacaoDTO;
+import com.saimon.controle_financeiro.dto.ResumoValoresDTO;
 import com.saimon.controle_financeiro.Domain.Enum.TipoMovimentacao;
 import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
@@ -19,12 +22,14 @@ public class MovimentacaoService {
 
     private final MovimentacaoRepository movimentacaoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final LoggerServiceInterface loggerService;
     private MovimentacaoDTO movimentacaoDTO;
 
     // Construtor
-    public MovimentacaoService(MovimentacaoRepository movimentacaoRepository, UsuarioRepository usuarioRepository){
+    public MovimentacaoService(MovimentacaoRepository movimentacaoRepository, UsuarioRepository usuarioRepository, LoggerServiceInterface loggerService){
         this.movimentacaoRepository = movimentacaoRepository;
         this.usuarioRepository = usuarioRepository;
+	    this.loggerService = loggerService;
     }
 
     // Cria uma movimentação
@@ -36,11 +41,16 @@ public class MovimentacaoService {
         movimentacao.setUsuario(usuario);
         movimentacao.setDataDeCriacao(LocalDateTime.now());
 
+        loggerService.logEvento(usuario, LogTipoEvento.MOVIMENTACAO_CRIADA, "Movimentação criada com ID " + movimentacao.getId());
+
         return movimentacaoRepository.save(movimentacao);
     }
 
     // Lista as movimentações
     public List<Movimentacao> findAll(String email){
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Usuário com email " + email + " não encontrado"));
+
         return movimentacaoRepository.findAllByUsuarioEmail(email);
     }
 

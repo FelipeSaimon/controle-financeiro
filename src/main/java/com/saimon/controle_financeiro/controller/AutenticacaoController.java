@@ -1,7 +1,7 @@
 package com.saimon.controle_financeiro.controller;
 
-import com.saimon.controle_financeiro.DTO.LoginDTO;
-import com.saimon.controle_financeiro.DTO.SessaoDTO;
+import com.saimon.controle_financeiro.dto.LoginDTO;
+import com.saimon.controle_financeiro.dto.SessaoDTO;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
 import com.saimon.controle_financeiro.exceptions.CamposObrigatorios;

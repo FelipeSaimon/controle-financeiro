@@ -1,14 +1,13 @@
 package com.saimon.controle_financeiro.controller;
 
-import com.saimon.controle_financeiro.DTO.ResumoValoresDTO;
+import com.saimon.controle_financeiro.dto.ResumoValoresDTO;
 import com.saimon.controle_financeiro.Domain.model.Movimentacao;
 import com.saimon.controle_financeiro.Domain.model.Usuario;
 import com.saimon.controle_financeiro.Domain.repository.MovimentacaoRepository;
 import com.saimon.controle_financeiro.Domain.repository.UsuarioRepository;
-import com.saimon.controle_financeiro.DTO.MovimentacaoDTO;
+import com.saimon.controle_financeiro.dto.MovimentacaoDTO;
 import com.saimon.controle_financeiro.exceptions.UserNotFoundException;
 import com.saimon.controle_financeiro.service.MovimentacaoService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

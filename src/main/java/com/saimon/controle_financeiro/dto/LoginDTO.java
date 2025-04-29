@@ -1,4 +1,4 @@
-package com.saimon.controle_financeiro.DTO;
+package com.saimon.controle_financeiro.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

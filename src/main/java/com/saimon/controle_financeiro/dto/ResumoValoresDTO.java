@@ -1,4 +1,4 @@
-package com.saimon.controle_financeiro.DTO;
+package com.saimon.controle_financeiro.dto;
 
 import java.math.BigDecimal;
 

@@ -12,15 +12,17 @@ import java.util.Optional;
 
 @Service
 public class UsuarioService {
+
+    // Injeção de dependencias
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    private PasswordEncoder encoder;
-
-    public UsuarioService(UsuarioRepository usuarioRepository){
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder encoder){
         this.usuarioRepository = usuarioRepository;
+	    this.encoder = encoder;
     }
 
+    // Cadastro de usuario
     public Usuario save(Usuario usuario) throws Exception{
         if(usuario.getNome() == null || usuario.getEmail() == null || usuario.getSenha() == null){
             throw new IllegalArgumentException("Campos obrigatórios!");
@@ -32,14 +34,17 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    // Busca por ID do usuario
     public Usuario findById(Long id){
         return usuarioRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
+    // Busca pelo email, para pegar os dados de usuario autenticado.
     public Usuario findByEmail(String email){
         return usuarioRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 
+    // Remoção de usuario.
     public void delete(Long id){
         usuarioRepository.deleteById(id);
     }
